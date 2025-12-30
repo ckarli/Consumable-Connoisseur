@@ -47,7 +47,7 @@ local itemCategories = {
         4542, -- (243) Tel'Abim Banana
         2287, -- (243) Haunch of Meat
         5349, -- (61) Conjured Muffin
-        4540 -- (61) Tough Hunk of Bread
+        4540, -- (61) Tough Hunk of Bread
         4539, -- (61) Goldenbark Apple
         117, -- (61) Tough Jerky
     },
@@ -70,7 +70,7 @@ local itemCategories = {
         2288, -- (437) Conjured Fresh Water
         1179, -- (436) Ice Cold Milk
         5350, -- (151) Conjured Water
-        159 -- (151) Refreshing Spring Water
+        159, -- (151) Refreshing Spring Water
     },
     ["- Health Potion"] = {
         -- https://www.wowhead.com/tbc/item=929/healing-potion#shared-cooldown;q=heal
@@ -89,7 +89,7 @@ local itemCategories = {
         1710, -- (585) Greater Healing Potion
         929, -- (360) Healing Potion
         858, -- (180) Lesser Healing Potion
-        118 -- (90) Minor Healing Potion
+        118, -- (90) Minor Healing Potion
     },
     ["- Mana Potion"] = {
         -- https://www.wowhead.com/tbc/item=929/healing-potion#shared-cooldown;q=mana
@@ -109,7 +109,7 @@ local itemCategories = {
         6149, -- (900) Greater Mana Potion
         3827, -- (585) Mana Potion
         3385, -- (360) Lesser Mana Potion
-        2455 -- (180) Minor Mana Potion
+        2455, -- (180) Minor Mana Potion
     },
     ["- Healthstone"] = {
         -- https://www.wowhead.com/tbc/item=5509/healthstone#shared-cooldown;q=healthstone
@@ -130,7 +130,7 @@ local itemCategories = {
         5510, -- (250) Lesser Healthstone
         19003, -- (120) Minor Healthstone
         19002, -- (110) Minor Healthstone
-        5509 -- (100) Minor Healthstone
+        5509, -- (100) Minor Healthstone
     },
     ["- Bandage"] = {
         -- https://www.wowhead.com/tbc/item=14530/heavy-runecloth-bandage#shared-cooldown;0-3+1-2;q=bandage
@@ -156,7 +156,7 @@ local itemCategories = {
         3531, -- (301) Heavy Wool Bandage
         3530, -- (161) Wool Bandage
         2581, -- (114) Heavy Linen Bandage
-        1251 -- (66) Linen Bandage
+        1251, -- (66) Linen Bandage
     }
 }
 
