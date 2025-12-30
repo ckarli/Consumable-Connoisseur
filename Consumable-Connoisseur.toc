@@ -1,9 +1,19 @@
-## Interface: 11508, 20505
 ## Title: Consumable Connoisseur
-## Notes: Automatically updates your macros to use the best available Food, Water, Potions, Healthstones, and Bandages currently in your bags.
+## Notes: Automatically use the best available Food, Water, Potions, Healthstones, and Bandages currently in your bags.
 ## Author: Gogo1951
-## Version: 1.0
 
+## IconTexture: Interface/AddOns/Consumable-Connoisseur/Consumable-Connoisseur.tga
+## Category-enUS: Combat
+## X-License: MIT
+
+## Interface: 11508, 20505 
+## Version: @project-version@
+## X-Curse-Project-ID: 1416865
+
+# Consumable Connoisseur
 Consumable-Connoisseur.lua
 
-## GitHub // https://github.com/Gogo1951/Consumable-Connoisseur
+# Feedback Welcome! (=
+# Consumable Connoisseur on CurseForge // https://www.curseforge.com/wow/addons/consumable-connoisseur
+# Consumable Connoisseur on GitHub // https://github.com/Gogo1951/Consumable-Connoisseur
+# Consumable Connoisseur on Discord // https://discord.gg/eh8hKq992Q
