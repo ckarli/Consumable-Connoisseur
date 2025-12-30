@@ -22,11 +22,14 @@ local itemCategories = {
     ["- Food"] = {
         34062, -- (7500+) Conjured Manna Biscuit
         22019, -- (7500) Conjured Croissant
+        34780, -- (7500) Naaru Ration
+        19301, -- (4410) Alterac Manna Biscuit
         22895, -- (4320) Conjured Cinnamon Roll
         27859, -- (4320) Mag'har Grainbread
         27855, -- (4320) Telaari Grapes
         27854, -- (4320) Smoked Talbuk Venison
         8076, -- (2148) Conjured Sweet Roll
+        13724, -- (2148) Enriched Manna Biscuit        
         27858, -- (2148) Crusty Flatbread
         27857, -- (2148) Skethyl Berries
         8952, -- (2148) Roasted Quail
@@ -54,9 +57,12 @@ local itemCategories = {
     ["- Water"] = {
         34062, -- (7200+) Conjured Manna Biscuit
         22018, -- (7200) Conjured Glacier Water
+        34780, -- (7200) Naaru Ration
         30703, -- (5100) Conjured Mountain Spring Water
         27860, -- (5100) Purified Draenic Water
         8079, -- (4200) Conjured Crystal Water
+        19301, -- (4410) Alterac Manna Biscuit
+        13724, -- (4410) Enriched Manna Biscuit     
         28399, -- (4200) Filtered Draenic Water
         8078, -- (2934) Conjured Sparkling Water
         8766, -- (2934) Morning Glory Dew
