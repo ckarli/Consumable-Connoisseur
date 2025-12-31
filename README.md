@@ -22,13 +22,11 @@ Easy Setup: Just drag these macros to your action bar once. As you loot new item
 
 🧠 **Zone Aware** : Prioritizes Battleground-specific consumables (like Arathi Basin Runecloth Bandages) when you are in the correct zone.
 
-💬 **Contextual Tooltips** : The macro icon and tooltip update in real-time to show exactly which item will be used next.
-
-0️⃣ **Zero Configuration** : No options menu required. Just install and play.
+💬 **Accurate Tooltips** : The macro icon and tooltip update in real-time to show exactly which item will be used next.
 
 ⏩ **Performance Optimized** : Only updates when inventory changes or combat ends; zero CPU impact during raids or PvP combat.
 
-## Installation
+## Setup
 
 1. Install the addon.
 2. Log in.
