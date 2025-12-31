@@ -1,32 +1,24 @@
 # Consumable Connoisseur
 
-Stop dragging new water and food ranks to your action bars every few levels.
+This add-on intelligently updates a macro with your best available food, water, potions, healthstones, and bandages.
 
-Consumable Connoisseur is a lightweight, "set it and forget it" addon that automatically manages your consumable buttons. It scans your inventory and updates specific macros to always use the best possible item available to you based on your character's level, current zone, and item count.
+Stop dragging new consumables to your action bars every few levels, when you run with a new Warlock, do a Heroic in Area 52, or do some PvP.
 
 ![Consumable-Connoisseur](https://github.com/user-attachments/assets/326eb93f-329f-4967-b750-909011a05b01)
 
 ## Features
 
-🧠 **Zone Aware** : Prioritizes Battleground-specific consumables (like Arathi Basin Runecloth Bandages) when you are in the correct zone.
+🤖 **Auto-Updating**: Never manually replace a consumable on your bar again.
 
-💬 **Accurate Tooltips** : The macro icon and tooltip update in real-time to show exactly which item will be used next.
+🧠 **Zone Aware**: Prioritizes Battleground-specific consumables (like Arathi Basin Runecloth Bandages) when you are in the correct zone.
 
-⏩ **Performance Optimized** : Only updates when inventory changes or combat ends; zero CPU impact during raids or PvP combat.
+💬 **Accurate Tooltips**: What You See Is What You Get. No more shoehorned macros that don't show the correct tooltips or item counts.
 
-## How It Works
-
-The addon automatically creates and maintains the following macros in your General or Character specific macro tab:
-
-*  **Food & Water** : Picks the food & water that will return the most health or mana, prioritizing conjured items if you have them.
-*  **Health Potions** : Uses the highest healing potion or injector.
-*  **Mana Potions** : Uses the highest mana potion, injector, or gem.
-*  **Bandages** : Uses the best bandage, including zone-specific Battleground bandages (e.g., Warsong Gulch Silk Bandage, or Bottled Nethergon Energy).
-*  **Healthstones** : Uses the best Healthstone and accurately shows the right tooltip, no matter the talent rank.
-
-Easy Setup: Just drag these macros to your action bar once. As you loot new items, level up, or enter a Battleground, the addon updates the macro in the background.
+⏩ **Performance Optimized**: Only updates when inventory changes or combat ends.
 
 ## Setup
+
+**Easy Setup:** Just drag these macros to your action bar once. As you loot new items, level up, or enter a Battleground, the addon updates the macro in the background.
 
 1. Install the addon.
 2. Log in.
@@ -35,7 +27,7 @@ Easy Setup: Just drag these macros to your action bar once. As you loot new item
 5. Drag them to your bars.
 6. Done, never think about consumables again. (=
 
-Note: If you run out of a specific item, the macro will default to a fallback icon and print a message if clicked.
+*Note: If you run out of a specific consumable type, the macro will default to a fallback icon.*
 
 ## Download
 
