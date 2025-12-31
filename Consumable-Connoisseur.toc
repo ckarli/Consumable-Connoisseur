@@ -1,5 +1,5 @@
 ## Title: Consumable Connoisseur
-## Notes: Intelligently utilizes the best available food, water, potions, healthstones, and bandages based on your zone, level, professions, and inventory.
+## Notes: Automatically use the best available Food, Water, Potions, Healthstones, and Bandages currently in your bags.
 ## Author: Gogo1951
 
 ## IconTexture: Interface/AddOns/Consumable-Connoisseur/Consumable-Connoisseur.tga
