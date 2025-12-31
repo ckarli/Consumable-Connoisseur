@@ -179,7 +179,6 @@ local function FindBestItemInBag(idList)
     for _, targetID in ipairs(idList) do
         local count = GetItemCount(targetID)
         if count > 0 then
-
             local isUsable, _ = IsUsableItem(targetID)
             
             if isUsable then
@@ -199,6 +198,10 @@ end
 local function UpdateMacros()
     if InCombatLockdown() then return end
 
+    local numAccount, numChar = GetNumMacros()
+    local limitAccount = MAX_ACCOUNT_MACROS or 120
+    local limitChar = MAX_CHARACTER_MACROS or 18
+
     for macroName, idList in pairs(itemCategories) do
         local bestID = FindBestItemInBag(idList)
         local newBody = ""
@@ -214,10 +217,15 @@ local function UpdateMacros()
         local macId = GetMacroIndexByName(macroName)
         
         if macId == 0 then
-
-            local numAccount, numChar = GetNumMacros()
-            if numChar < 18 then
+            if numChar < limitChar then
                 CreateMacro(macroName, icon, newBody, 1)
+                numChar = numChar + 1
+            
+            elseif numAccount < limitAccount then
+                CreateMacro(macroName, icon, newBody, nil)
+                numAccount = numAccount + 1
+            else
+                print("|cffCC3333" .. addonName .. ": Macro limit reached! Could not create '" .. macroName .. "'.|r")
             end
         else
             local _, _, currentBody = GetMacroBody(macId)
