@@ -8,13 +8,13 @@ Stop dragging new consumables to your action bars every few levels, when you run
 
 ## Features
 
-🤖 **Auto-Updating**: Never manually replace a consumable on your bar again.
+🤖 **Auto-Updating** : Never manually replace a consumable on your bar again.
 
-🧠 **Zone Aware**: Prioritizes Battleground-specific consumables (like Arathi Basin Runecloth Bandages) when you are in the correct zone.
+🧠 **Zone Aware** : Prioritizes Battleground-specific consumables (like Arathi Basin Runecloth Bandages) when you are in the correct zone.
 
-💬 **Accurate Tooltips**: What You See Is What You Get. No more shoehorned macros that don't show the correct tooltips or item counts.
+💬 **Accurate Tooltips** : What You See Is What You Get. No more shoehorned macros that don't show the correct tooltips or item counts.
 
-⏩ **Performance Optimized**: Only updates when inventory changes or combat ends.
+⏩ **Performance Optimized** : Only updates when inventory changes or combat ends.
 
 ## Setup
 
