@@ -1,20 +1,22 @@
 # Consumable Connoisseur
 
-This add-on intelligently updates a macro with your best available food, water, potions, healthstones, and bandages.
+This is a smart macro manager for World of Warcraft Classic & TBC. It automatically scans your bags and updates your action bar macros with the absolute best item available for your current situation.
 
-Stop dragging new consumables to your action bars every few levels, when you run with a new Warlock, do a Heroic in Area 52, or do some PvP.
+Whether you just leveled up, looted a stack of conjured water, picked up a stange healthstone from a new warlock, or walked into Arathi Basin, your buttons will always work.
 
 ![Consumable-Connoisseur](https://github.com/user-attachments/assets/326eb93f-329f-4967-b750-909011a05b01)
 
 ## Features
 
-🤖 **Auto-Updating** : Never manually replace a consumable on your bar again.
+🤖 **Auto-Updating** : Macros update instantly when you loot items, trade, level up, or change zones.
+
+🦺 **Safety First** : Uses a strict whitelist database. It will never accidentally eat your expensive Raid Buff food.
 
 🧠 **Zone Aware** : Prioritizes Battleground-specific consumables (like Arathi Basin Runecloth Bandages) when you are in the correct zone.
 
-💬 **Accurate Tooltips** : What You See Is What You Get. No more shoehorned macros that don't show the correct tooltips or item counts.
+💬 **Perfect Tooltips** : What You See Is What You Get. No more shoehorned macros that don't show the correct tooltips or item counts.
 
-⏩ **Performance Optimized** : Only updates when inventory changes or combat ends.
+⏩ **Optimized** : Light-weight, but also only updates when inventory changes or combat ends.
 
 ## Setup
 
