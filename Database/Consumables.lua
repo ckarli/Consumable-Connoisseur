@@ -262,8 +262,8 @@ ns.PriorityLists = {
         3827, -- Mana Potion
         1072, -- Full Moonshine
         3385, -- Lesser Mana Potion
-        2455, -- Minor Mana Potion
         3087, -- Mug of Shimmer Stout
+        2455, -- Minor Mana Potion
     },
     ["- Healthstone"] = {
         -- https://www.wowhead.com/tbc/item=5509/healthstone#shared-cooldown;q=healthstone
