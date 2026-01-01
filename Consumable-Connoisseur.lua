@@ -53,18 +53,41 @@ else
     end
 end
 
+-- Tooltip for scanning item requirements (Hidden)
+local scanTooltip = CreateFrame("GameTooltip", "CCScannerTooltip", nil, "GameTooltipTemplate")
+scanTooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+
 local function IsItemUseful(itemID, playerLevel)
     if not itemID then return false end
     
-    -- Check if item is usable (Class/Race requirements)
+    -- 1. Basic Usable Check (Class/Race)
     local isUsable, _ = IsUsableItem(itemID)
     if not isUsable then return false end
 
-    -- Check Level Requirement (Safe against nil cache)
+    -- 2. Level Requirement Check
     local _, _, _, _, itemMinLevel = GetItemInfo(itemID)
-    if not itemMinLevel then return true end -- Assume usable if cache is missing on login
-
+    if not itemMinLevel then return true end -- Assume usable if cache missing
     if playerLevel < itemMinLevel then return false end
+
+    -- 3. Profession/Skill Requirement Check (via Tooltip)
+    scanTooltip:ClearLines()
+    scanTooltip:SetHyperlink("item:"..itemID)
+    
+    -- Scan lines 2 through 5 (usually where requirements are)
+    for i = 2, scanTooltip:NumLines() do
+        local line = _G["CCScannerTooltipTextLeft"..i]
+        if line then
+            local text = line:GetText()
+            if text then
+                -- Red text indicates an unmet requirement
+                local r, g, b = line:GetTextColor()
+                -- Check for red color (approximate, usually close to 1, 0.1, 0.1)
+                if r > 0.9 and g < 0.2 and b < 0.2 then
+                    return false
+                end
+            end
+        end
+    end
     
     return true
 end
@@ -245,6 +268,10 @@ local function RequestUpdate()
     if InCombatLockdown() then return else updateFrame:Show() end
 end
 
+----------------------------------------------------------------------
+-- Events
+----------------------------------------------------------------------
+
 frame:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_REGEN_ENABLED" then
         UpdateMacros()
@@ -253,10 +280,14 @@ frame:SetScript("OnEvent", function(self, event, ...)
     end
 end)
 
-frame:RegisterEvent("PLAYER_REGEN_ENABLED")
-frame:RegisterEvent("BAG_UPDATE_DELAYED")
-frame:RegisterEvent("GET_ITEM_INFO_RECEIVED")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-frame:RegisterEvent("PLAYER_LEVEL_UP")
-frame:RegisterEvent("ZONE_CHANGED")
-frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
+-- Core Events
+frame:RegisterEvent("PLAYER_REGEN_ENABLED")   -- Combat end
+frame:RegisterEvent("BAG_UPDATE_DELAYED")     -- Inventory change
+frame:RegisterEvent("GET_ITEM_INFO_RECEIVED") -- Item data loaded
+
+-- State Change Events (Unlock items)
+frame:RegisterEvent("PLAYER_ENTERING_WORLD")  -- Login/Zone in
+frame:RegisterEvent("PLAYER_LEVEL_UP")        -- Level requirement check
+frame:RegisterEvent("SKILL_LINES_CHANGED")    -- Profession requirement check (First Aid)
+frame:RegisterEvent("ZONE_CHANGED")           -- BG Zone Check
+frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")  -- BG Zone Check
