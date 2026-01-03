@@ -4,7 +4,7 @@ This add-on automatically scans your bags and updates consumable macros with the
 
 Whether you just leveled up, picked up a stack of conjured water, traded for a Healthstone, or just zoned into Tempest Keep or Warsong Gulch, your buttons are always ready. It can even prioritize food that keeps you "Well Fed" if your buff drops off.
 
-<img width="350" alt="image" src="https://github.com/user-attachments/assets/7265863c-b53e-4687-9c87-76cb2ac65f62" />
+<img width="350" alt="image" src="https://github.com/user-attachments/assets/bb34ccc9-fda5-433d-a531-83a364dc91ca" />
 
 ## Features
 
