@@ -84,6 +84,9 @@ local function ScanBagItem(bag, slot)
 
     local staticData = itemCache[itemID]
     if not staticData then
+        local name, _, _, _, _, _, subType, _, _, _, iPrice = GetItemInfo(itemID)
+        if not name then return nil end 
+
         scannerTooltip:ClearLines()
         scannerTooltip:SetHyperlink(info.hyperlink)
         
@@ -98,13 +101,10 @@ local function ScanBagItem(bag, slot)
 
         staticData = {
             id = itemID,
-            valHealth = 0, valMana = 0, reqLvl = 0, reqFA = 0, price = 0,
+            valHealth = 0, valMana = 0, reqLvl = 0, price = iPrice or 0,
             isFood = false, isWater = false, isBandage = false, 
             isPotion = false, isHealthstone = false, isBuffFood = false
         }
-
-        local _, _, _, _, _, _, _, _, _, _, iPrice = GetItemInfo(itemID)
-        staticData.price = iPrice or 0
 
         local foundSeated = false
         local foundMana = false
@@ -116,9 +116,6 @@ local function ScanBagItem(bag, slot)
         for _, text in ipairs(scanLines) do
             local lvl = text:match(L["SCAN_REQ_LEVEL"])
             if lvl then staticData.reqLvl = tonumber(lvl) end
-
-            local fa = text:match(L["SCAN_REQ_FA"])
-            if fa then staticData.reqFA = tonumber(fa) end
 
             if text:find(L["SCAN_SEATED"]) then foundSeated = true end
             if text:find(L["SCAN_MANA"]) then foundMana = true end
@@ -137,6 +134,9 @@ local function ScanBagItem(bag, slot)
             end
         end
 
+        local nameLower = name:lower()
+        local isBandageByName = (subType == "Bandage" or nameLower:find("bandage"))
+
         if foundSeated then
             if foundMana then 
                 staticData.isWater = true 
@@ -148,17 +148,16 @@ local function ScanBagItem(bag, slot)
             end
             if foundWellFed then staticData.isBuffFood = true end
         
-        elseif foundHealsVal > 0 and foundHealth then
+        elseif isBandageByName and (foundHealsVal > 0 or foundRestoresVal > 0) then
             staticData.isBandage = true
-            staticData.valHealth = foundHealsVal
+            staticData.valHealth = (foundHealsVal > 0) and foundHealsVal or foundRestoresVal
 
         elseif foundRestoresVal > 0 then
             if foundMana then
                 staticData.isPotion = true
                 staticData.valMana = foundRestoresVal
-            elseif foundHealth then
-                local n = GetItemInfo(itemID)
-                if n and n:find("Healthstone") then
+            elseif foundHealth or foundRestoresVal > 0 then 
+                if nameLower:find("healthstone") then
                     staticData.isHealthstone = true
                 else
                     staticData.isPotion = true
@@ -172,7 +171,6 @@ local function ScanBagItem(bag, slot)
 
     if not IsInAllowedZone(itemID) then return nil end
     if staticData.reqLvl > UnitLevel("player") then return nil end
-    if staticData.reqFA > GetFirstAidRank() then return nil end
 
     return {
         id = staticData.id, valHealth = staticData.valHealth, valMana = staticData.valMana,
