@@ -12,6 +12,7 @@ L["MACRO_HS"] = "- Healthstone"
 L["MACRO_BANDAGE"] = "- Bandage"
 L["MSG_NO_ITEM"] = "No suitable %s found in your bags."
 L["ERR_ZONE"] = "You can't use that here."
+L["RANK"] = "Rank"
 
 -- Bug Report Format
 L["MSG_BUG_REPORT"] = "Looks like you found a bug! %s (%s) can't be used in %s > %s (%s). Please report this so we can get it fixed. Thanks! https://discord.gg/eh8hKq992Q"
@@ -25,6 +26,13 @@ L["MENU_CLEAR_IGNORE"] = "Clear Ignore List"
 
 L["MENU_BUFF_FOOD"] = "Prioritize Buff Food"
 L["MENU_BUFF_FOOD_DESC"] = "Prioritizes food that grants the \"Well Fed\" buff, when the buff is missing."
+
+-- Minimap Class Tips
+L["PREFIX_MAGE"] = "Mages"
+L["PREFIX_WARLOCK"] = "Warlocks"
+L["TIP_MAGE"] = "Right-Click on your Food or Water macros to Create Food or Water. Middle-click will cast Ritual of Refreshment."
+L["TIP_WARLOCK"] = "Right-Click on your Healthstone macro to create a Healthstone. Middle-click will cast Ritual of Souls."
+L["TIP_DOWNRANK"] = "Targeting a lower-level player will cause the macro to conjure items usable by that player."
 
 -- UI Elements
 L["UI_ENABLED"] = "Enabled"
