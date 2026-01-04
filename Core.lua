@@ -123,8 +123,6 @@ local function IsInAllowedZone(itemID)
 end
 
 -- [[ SCANNING LOGIC ]] --
-
--- [[ OPTIMIZED SCANNING LOGIC ]] --
 local function ScanBagItem(bag, slot)
     local info = C_Container.GetContainerItemInfo(bag, slot)
     if not info or not info.itemID then return nil end
@@ -145,7 +143,7 @@ local function ScanBagItem(bag, slot)
         if scannerTooltip:NumLines() == 0 then return nil end
 
         staticData = {
-            id = itemID, valHealth = 0, valMana = 0, reqLvl = 0, price = iPrice or 0,
+            id = itemID, valHealth = 0, valMana = 0, reqLvl = 0, reqFA = 0, price = iPrice or 0,
             isFood = false, isWater = false, isBandage = false, 
             isPotion = false, isHealthstone = false, isBuffFood = false, isPercent = false
         }
@@ -162,10 +160,11 @@ local function ScanBagItem(bag, slot)
                     return nil 
                 end
 
-                if not staticData.reqLvl then 
-                    local lvl = text:match(L["SCAN_REQ_LEVEL"])
-                    if lvl then staticData.reqLvl = tonumber(lvl) end
-                end
+                local lvl = text:match(L["SCAN_REQ_LEVEL"])
+                if lvl then staticData.reqLvl = tonumber(lvl) end
+
+                local fa = text:match(L["SCAN_REQ_FA"])
+                if fa then staticData.reqFA = tonumber(fa) end
 
                 if text:find(L["SCAN_SEATED"]) then foundSeated = true end
                 if text:find(L["SCAN_WELL_FED"]) then staticData.isBuffFood = true end
@@ -219,8 +218,22 @@ local function ScanBagItem(bag, slot)
     end
 
     if staticData == "IGNORE" then return nil end
-    if not IsInAllowedZone(itemID) then return nil end
+    
     if staticData.reqLvl > UnitLevel("player") then return nil end
+    
+    if staticData.isBandage and staticData.reqFA > 0 then
+        local hasSkill = false
+        for i = 1, GetNumSkillLines() do
+            local name, _, _, rank = GetSkillLineInfo(i)
+            if name == GetSpellInfo(129) then
+                if rank >= staticData.reqFA then hasSkill = true end
+                break
+            end
+        end
+        if not hasSkill then return nil end
+    end
+
+    if not IsInAllowedZone(itemID) then return nil end
 
     return {
         id = staticData.id, valHealth = staticData.valHealth, valMana = staticData.valMana,
@@ -377,13 +390,20 @@ frame:SetScript("OnEvent", function(self, event, ...)
         frame:UnregisterEvent("ADDON_LOADED")
     elseif event == "PLAYER_ENTERING_WORLD" then
         InitVars()
+        C_Timer.After(5, function() QueueUpdate() end)
+    elseif event == "BAG_UPDATE" or event == "BAG_UPDATE_DELAYED" then
         QueueUpdate()
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+        local unit, _, spellID = ...
+        if unit == "player" then
+            if ns.SpellCache and ns.SpellCache[spellID] then
+                QueueUpdate()
+            end
+        end
     elseif event == "PLAYER_REGEN_ENABLED" then
         frame:UnregisterEvent("PLAYER_REGEN_ENABLED")
         QueueUpdate()
-    elseif event == "UNIT_AURA" then
-        QueueUpdate()
-    elseif event == "GET_ITEM_INFO_RECEIVED" then
+    elseif event == "UNIT_AURA" or event == "GET_ITEM_INFO_RECEIVED" or event == "PLAYER_TARGET_CHANGED" then
         QueueUpdate()
     elseif event == "UI_ERROR_MESSAGE" then
         if CC_LastTime and (GetTime() - CC_LastTime) < 1.0 then
@@ -404,16 +424,11 @@ frame:SetScript("OnEvent", function(self, event, ...)
                 CC_LastTime = 0
             end
         end
-    elseif event == "PLAYER_TARGET_CHANGED" then
-        QueueUpdate()
-    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
-        QueueUpdate()
-    else
-        QueueUpdate()
     end
 end)
 
 frame:RegisterEvent("ADDON_LOADED")
+frame:RegisterEvent("BAG_UPDATE")
 frame:RegisterEvent("BAG_UPDATE_DELAYED")
 frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
