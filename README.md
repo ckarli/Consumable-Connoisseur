@@ -2,7 +2,9 @@
 
 This add-on automatically scans your bags and updates consumable macros with the best item available for your current situation.
 
-Whether you just leveled up, picked up a stack of conjured water, traded for a Healthstone, or just zoned into Tempest Keep or Warsong Gulch, your buttons are always ready. It can even prioritize food that keeps you "Well Fed" if your buff drops off.
+Whether you just leveled up, picked up a stack of conjured water, traded for a Healthstone, or just zoned into Tempest Keep or Warsong Gulch, your buttons are always ready. 
+
+Connoisseur can even prioritize food that keeps you "Well Fed" if your buff drops off.
 
 <img width="350" alt="image" src="https://github.com/user-attachments/assets/bb34ccc9-fda5-433d-a531-83a364dc91ca" />
 
@@ -55,9 +57,9 @@ https://www.curseforge.com/wow/addons/consumable-connoisseur
 
 🟢 World of Warcraft Classic : The Burning Crusade (Anniversary)
 
-🔴 Mists of Pandaria Classic
+🟡 Mists of Pandaria Classic
 
-🔴 World of Warcraft
+🟡 World of Warcraft
 
 Please reach out if you would like to be involved with testing!
 
