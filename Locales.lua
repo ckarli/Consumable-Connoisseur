@@ -28,10 +28,18 @@ L["MENU_BUFF_FOOD"] = "Prioritize Buff Food"
 L["MENU_BUFF_FOOD_DESC"] = "Prioritizes food that grants the \"Well Fed\" buff, when the buff is missing."
 
 -- Minimap Class Tips
-L["PREFIX_MAGE"] = "Mages"
-L["PREFIX_WARLOCK"] = "Warlocks"
-L["TIP_MAGE"] = "Right-Click on your Food or Water macros to Create Food or Water. Middle-click to cast Ritual of Refreshment."
-L["TIP_WARLOCK"] = "Right-Click on your Healthstone macro to create a Healthstone. Middle-click to cast Ritual of Souls."
+L["PREFIX_MAGE"] = "Attention Mages"
+L["PREFIX_WARLOCK"] = "Attention Warlocks"
+
+-- Mages
+L["TIP_MAGE_CONJURE"] = "Right-Click on your Food or Water macros to Create Food or Water."
+L["TIP_MAGE_TABLE"] = "Middle-click to cast Ritual of Refreshment."
+
+-- Warlocks
+L["TIP_WARLOCK_CONJURE"] = "Right-Click on your Healthstone macro to create a Healthstone."
+L["TIP_WARLOCK_SOUL"] = "Middle-click to cast Ritual of Souls."
+
+-- General
 L["TIP_DOWNRANK"] = "Targeting a lower-level player will cause the macro to conjure items appropriate for their level."
 
 -- UI Elements
