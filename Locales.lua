@@ -46,14 +46,16 @@ L["UI_IGNORE_LIST"] = "Ignore List"
 
 -- Scanning Patterns
 L["SCAN_HEALS"] = "heals (%d+)" 
-L["SCAN_RESTORES"] = "restores (%d+)" 
+L["SCAN_RESTORES"] = "restores (%d+)"
+L["SCAN_PERCENT"] = "restores (%d+)%%"
 L["SCAN_HEALTH"] = "health"
 L["SCAN_MANA"] = "mana"
 L["SCAN_SEATED"] = "must remain seated"
 L["SCAN_WELL_FED"] = "well fed" 
+L["SCAN_ALCOHOL"] = "alcoholic beverage"
 L["SCAN_REQ_LEVEL"] = "requires level (%d+)"
 L["SCAN_REQ_FA"] = "requires first aid %((%d+)%)"
-L["SCAN_USE"] = "use:" 
+L["SCAN_USE"] = "use:"
 
 -- Buff Names
 L["BUFF_WELL_FED"] = "Well Fed"
