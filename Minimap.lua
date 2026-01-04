@@ -31,44 +31,55 @@ local function OnEnter(anchor)
 
     -- CLASS SPECIFIC TIPS
     local _, class = UnitClass("player")
+    local descColor = C.DESC
     
     if class == "MAGE" and ns.ConjureSpells then
         local cColor = "|cff3FC7EB" -- Mage Blue
-        local descColor = C.DESC
         local knowsTable = KnowsAny(ns.ConjureSpells.MageTable)
         local knowsFood  = KnowsAny(ns.ConjureSpells.MageFood)
         local knowsWater = KnowsAny(ns.ConjureSpells.MageWater)
         
         if knowsFood or knowsWater or knowsTable then
             tooltip:AddLine(" ")
-            
-            -- Header
             tooltip:AddLine(cColor .. L["PREFIX_MAGE"] .. "|r")
             
-            -- Body Text
-            tooltip:AddLine(descColor .. L["TIP_MAGE"] .. "|r", 1, 1, 1, true)
+            -- Line 1: Right Click (Conjure)
+            if knowsFood or knowsWater then
+                tooltip:AddLine(descColor .. L["TIP_MAGE_CONJURE"] .. "|r", 1, 1, 1, true)
+            end
+
+            -- Line 2: Middle Click (Table) - Only if learned
+            if knowsTable then
+                tooltip:AddLine(" ") -- Spacing
+                tooltip:AddLine(descColor .. L["TIP_MAGE_TABLE"] .. "|r", 1, 1, 1, true)
+            end
             
-            -- Spacing & Downrank Tip
+            -- Footer: Downranking
             tooltip:AddLine(" ")
             tooltip:AddLine(descColor .. L["TIP_DOWNRANK"] .. "|r", 1, 1, 1, true)
         end
 
     elseif class == "WARLOCK" and ns.ConjureSpells then
         local cColor = "|cff8787ED" -- Warlock Purple
-        local descColor = C.DESC
         local knowsSoul = KnowsAny(ns.ConjureSpells.WarlockSoul)
         local knowsHS   = KnowsAny(ns.ConjureSpells.WarlockHS)
 
         if knowsHS or knowsSoul then
             tooltip:AddLine(" ")
-            
-            -- Header
             tooltip:AddLine(cColor .. L["PREFIX_WARLOCK"] .. "|r")
             
-            -- Body Text
-            tooltip:AddLine(descColor .. L["TIP_WARLOCK"] .. "|r", 1, 1, 1, true)
+            -- Line 1: Right Click (Healthstone)
+            if knowsHS then
+                tooltip:AddLine(descColor .. L["TIP_WARLOCK_CONJURE"] .. "|r", 1, 1, 1, true)
+            end
             
-            -- Spacing & Downrank Tip
+            -- Line 2: Middle Click (Soulwell) - Only if learned
+            if knowsSoul then
+                tooltip:AddLine(" ") -- Spacing
+                tooltip:AddLine(descColor .. L["TIP_WARLOCK_SOUL"] .. "|r", 1, 1, 1, true)
+            end
+            
+            -- Footer: Downranking
             tooltip:AddLine(" ")
             tooltip:AddLine(descColor .. L["TIP_DOWNRANK"] .. "|r", 1, 1, 1, true)
         end
@@ -130,11 +141,3 @@ if LDB then
         OnLeave = function() GameTooltip:Hide() end
     })
 end
-
-local f = CreateFrame("Frame")
-f:RegisterEvent("PLAYER_LOGIN")
-f:SetScript("OnEvent", function()
-    if not CC_Settings then CC_Settings = {} end
-    if not CC_Settings.Minimap then CC_Settings.Minimap = {} end
-    if LDBIcon and ns.LDBObj then LDBIcon:Register(addonName, ns.LDBObj, CC_Settings.Minimap) end
-end)
