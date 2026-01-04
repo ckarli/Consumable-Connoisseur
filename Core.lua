@@ -19,7 +19,6 @@ local scanLines = {}
 local function InitVars()
     if not CC_IgnoreList then CC_IgnoreList = {} end
     if not CC_Settings then CC_Settings = { UseBuffFood = false } end
-    
     wipe(itemCache)
 
     if CC_Settings.UseBuffFood then
@@ -43,17 +42,7 @@ local function ParseNumber(text)
     if not text then return 0 end
     local match = text:match("([%d,]+)")
     if not match then return 0 end
-    local val = string.gsub(match, ",", "")
-    return tonumber(val) or 0
-end
-
-local function GetFirstAidRank()
-    local profs = {GetProfessions()}
-    for _, index in ipairs(profs) do
-        local name, _, rank = GetProfessionInfo(index)
-        if name == "First Aid" then return rank end
-    end
-    return 0
+    return tonumber((string.gsub(match, ",", ""))) or 0
 end
 
 local function PlayerHasBuff(buffName)
@@ -65,10 +54,36 @@ local function PlayerHasBuff(buffName)
     return false
 end
 
+local function GetSmartSpell(spellList)
+    if not spellList then return nil, 0 end
+    local levelCap = UnitLevel("player")
+    
+    if UnitExists("target") and UnitIsFriend("player", "target") and UnitIsPlayer("target") then
+        local tLvl = UnitLevel("target")
+        if tLvl > 0 then levelCap = tLvl end
+    end
+
+    local knownHighest = false
+    for _, data in ipairs(spellList) do
+        local id, req, rankNum = data[1], data[2], data[3]
+        if IsSpellKnown(id) then knownHighest = true end
+        if knownHighest and req <= levelCap then
+            local name = GetSpellInfo(id)
+            if name then
+                if rankNum then return name .. "(" .. L["RANK"] .. " " .. rankNum .. ")", id end
+                return name, id
+            end
+        end
+    end
+    return nil, 0
+end
+
 local function IsInAllowedZone(itemID)
     local allowedZones = ns.ItemZoneRestrictions[itemID]
     if not allowedZones then return true end
     local currentMap = C_Map.GetBestMapForUnit("player")
+    if not currentMap then return false end -- Safety check
+    
     for _, mapID in ipairs(allowedZones) do
         if mapID == currentMap then return true end
     end
@@ -81,6 +96,10 @@ local function ScanBagItem(bag, slot)
     local itemID = info.itemID
 
     if CC_IgnoreList[itemID] or ns.Excludes[itemID] then return nil end
+
+    -- STRICT FILTER: Only allow Consumables (ClassID: 0)
+    local _, _, _, _, _, classID = GetItemInfoInstant(itemID)
+    if classID ~= 0 then return nil end
 
     local staticData = itemCache[itemID]
     if not staticData then
@@ -106,12 +125,8 @@ local function ScanBagItem(bag, slot)
             isPotion = false, isHealthstone = false, isBuffFood = false
         }
 
-        local foundSeated = false
-        local foundMana = false
-        local foundHealth = false
-        local foundWellFed = false
-        local foundRestoresVal = 0
-        local foundHealsVal = 0
+        local foundSeated, foundMana, foundHealth, foundWellFed = false, false, false, false
+        local foundRestoresVal, foundHealsVal = 0, 0
 
         for _, text in ipairs(scanLines) do
             local lvl = text:match(L["SCAN_REQ_LEVEL"])
@@ -129,8 +144,10 @@ local function ScanBagItem(bag, slot)
             if hVal > 0 then foundHealsVal = hVal end
             
             if text:find(L["SCAN_USE"]) and foundRestoresVal == 0 then
-                 local uVal = ParseNumber(text)
-                 if uVal > 0 then foundRestoresVal = uVal end
+                 if text:find(L["SCAN_HEALTH"]) or text:find(L["SCAN_MANA"]) then
+                     local uVal = ParseNumber(text)
+                     if uVal > 0 then foundRestoresVal = uVal end
+                 end
             end
         end
 
@@ -165,12 +182,18 @@ local function ScanBagItem(bag, slot)
                 staticData.valHealth = foundRestoresVal
             end
         end
-        
         itemCache[itemID] = staticData
     end
 
     if not IsInAllowedZone(itemID) then return nil end
-    if staticData.reqLvl > UnitLevel("player") then return nil end
+    local levelCap = UnitLevel("player")
+    
+    if UnitExists("target") and UnitIsFriend("player", "target") and UnitIsPlayer("target") then
+        local tLvl = UnitLevel("target")
+        if tLvl > 0 then levelCap = tLvl end
+    end
+
+    if staticData.reqLvl > levelCap then return nil end
 
     return {
         id = staticData.id, valHealth = staticData.valHealth, valMana = staticData.valMana,
@@ -183,11 +206,20 @@ end
 
 local function IsBetter(item, best)
     if not best then return true end
+    
+    -- Priority 1: Raw Value (Health + Mana)
     local iVal, bVal = item.valHealth + item.valMana, best.valHealth + best.valMana
     if iVal ~= bVal then return iVal > bVal end
+    
+    -- Priority 2: Cheapest Vendor Price (Save gold)
     if item.price ~= best.price then return item.price < best.price end
-    local iHyb, bHyb = (item.valHealth > 0 and item.valMana > 0), (best.valHealth > 0 and best.valMana > 0)
+    
+    -- Priority 3: Hybrid Value (Restores both > Restores one)
+    local iHyb = (item.valHealth > 0 and item.valMana > 0)
+    local bHyb = (best.valHealth > 0 and best.valMana > 0)
     if iHyb ~= bHyb then return iHyb end
+    
+    -- Priority 4: Lowest Stack Size (Clean bags)
     return item.stack < best.stack
 end
 
@@ -232,18 +264,56 @@ function ns.UpdateMacros(forced)
 
     for typeName, cfg in pairs(Config) do
         local item = best[typeName]
-        local body, icon, stateID
+        local tooltipLine, actionBlock, stateID, icon
         
         if item then
-            body = "#showtooltip item:"..item.id.."\n/run CC_LastID="..item.id..";CC_LastTime=GetTime()\n/use item:"..item.id
-            icon = GetItemIcon(item.id)
+            tooltipLine = "#showtooltip item:"..item.id.."\n"
+            actionBlock = "/run CC_LastID="..item.id..";CC_LastTime=GetTime()\n/use item:"..item.id
             stateID = tostring(item.id)
+            icon = GetItemIcon(item.id)
         else
             local msg = string.format(L["MSG_NO_ITEM"], typeName)
-            body = string.format("#showtooltip item:%d\n/run print('%s%s%s // %s%s')", cfg.defaultID, C.BLUE, L["BRAND"], C.GRAY, C.WHITE, msg)
-            icon = GetItemIcon(cfg.defaultID)
+            tooltipLine = "#showtooltip item:"..cfg.defaultID.."\n"
+            actionBlock = string.format("/run print('%s%s%s // %s%s')", C.INFO, L["BRAND"], C.MUTED, C.TEXT, msg)
             stateID = "none"
+            icon = GetItemIcon(cfg.defaultID)
         end
+
+        local conjureBlock = ""
+        local rightSpellName, rightSpellID, midSpellName, midSpellID
+
+        if typeName == "Water" then
+            rightSpellName, rightSpellID = GetSmartSpell(ns.ConjureSpells.MageWater)
+            midSpellName, midSpellID     = GetSmartSpell(ns.ConjureSpells.MageTable)
+        elseif typeName == "Food" then
+            rightSpellName, rightSpellID = GetSmartSpell(ns.ConjureSpells.MageFood)
+            midSpellName, midSpellID     = GetSmartSpell(ns.ConjureSpells.MageTable)
+        elseif typeName == "Healthstone" then
+            rightSpellName, rightSpellID = GetSmartSpell(ns.ConjureSpells.WarlockHS)
+            midSpellName, midSpellID     = GetSmartSpell(ns.ConjureSpells.WarlockSoul)
+        end
+
+        if rightSpellName or midSpellName then
+            local castLine = ""
+            local stopConditions = ""
+
+            if midSpellName then
+                castLine = castLine .. "[btn:3] " .. midSpellName .. "; "
+                stopConditions = stopConditions .. "[btn:3]"
+            end
+            
+            if rightSpellName then
+                castLine = castLine .. "[btn:2] " .. rightSpellName .. "; "
+                stopConditions = stopConditions .. "[btn:2]"
+            end
+
+            if castLine ~= "" then
+                conjureBlock = "/cast " .. castLine .. "\n/stopmacro " .. stopConditions .. "\n"
+                stateID = stateID .. "_R:" .. rightSpellID .. "_M:" .. midSpellID
+            end
+        end
+
+        local body = tooltipLine .. conjureBlock .. actionBlock
 
         if currentMacroState[typeName] ~= stateID or forced then
             local index = GetMacroIndexByName(cfg.macro)
@@ -264,7 +334,7 @@ end
 frame:SetScript("OnUpdate", function(self, elapsed)
     if updateQueued then
         updateTimer = updateTimer + elapsed
-        if updateTimer > 1.0 then 
+        if updateTimer > 0.5 then 
             ns.UpdateMacros()
             updateQueued, updateTimer = false, 0
         end
@@ -304,12 +374,16 @@ frame:SetScript("OnEvent", function(self, event, ...)
                     if l then link = l end
                 end
                 
-                print(C.BLUE..L["BRAND"]..C.GRAY.." // "..C.WHITE..
+                print(C.INFO..L["BRAND"]..C.MUTED.." // "..C.TEXT..
                     string.format(L["MSG_BUG_REPORT"], link, itemID, zone, subzone, mapID))
                 
                 CC_LastTime = 0
             end
         end
+    elseif event == "PLAYER_TARGET_CHANGED" then
+        QueueUpdate()
+    elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
+        QueueUpdate()
     else
         QueueUpdate()
     end
@@ -323,3 +397,5 @@ frame:RegisterEvent("PLAYER_LEVEL_UP")
 frame:RegisterEvent("UI_ERROR_MESSAGE")
 frame:RegisterEvent("PLAYER_UNGHOST")
 frame:RegisterEvent("PLAYER_ALIVE")
+frame:RegisterEvent("PLAYER_TARGET_CHANGED")
+frame:RegisterUnitEvent("UNIT_SPELLCAST_SUCCEEDED", "player")
