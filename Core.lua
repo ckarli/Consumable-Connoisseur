@@ -15,7 +15,6 @@ ns.BestFoodLink = nil
 local currentMacroState = {}
 local itemCache = {} 
 
--- Throttling & Event State
 local isUpdatePending = false
 local updateTimer = 0
 local UPDATE_THROTTLE = 0.5 
@@ -26,7 +25,6 @@ local function InitVars()
     if not CC_Settings then CC_Settings = { UseBuffFood = false } end
     if not CC_Settings.Minimap then CC_Settings.Minimap = {} end
 
-    -- Spell Name Caching
     ns.SpellCache = {}
     if ns.ConjureSpells then
         for _, spellList in pairs(ns.ConjureSpells) do
@@ -103,7 +101,6 @@ end
 -- [[ ITEM SCANNING ]] --
 
 local function CacheItemData(itemID)
-    
     local name, _, _, _, _, classType, subType, _, _, _, iPrice = GetItemInfo(itemID)
     if not name then return nil end 
 
@@ -140,7 +137,15 @@ local function CacheItemData(itemID)
             if lvl then data.reqLvl = tonumber(lvl) end
 
             local fa = text:match(txtFA)
-            if fa then data.reqFA = tonumber(fa) end
+            if fa then 
+                data.reqFA = tonumber(fa) 
+                
+                local r, g, b = line:GetTextColor()
+                if g < 0.5 then
+                    itemCache[itemID] = "IGNORE"
+                    return "IGNORE"
+                end
+            end
 
             if text:find(txtSeated) then foundSeated = true end
             if text:find(txtWellFed) then data.isBuffFood = true end
@@ -251,12 +256,6 @@ function ns.UpdateMacros(forced)
     
     local dataRetry = false
     
-    local faSkill = 0
-    for i = 1, GetNumSkillLines() do
-        local name, _, _, rank = GetSkillLineInfo(i)
-        if name == GetSpellInfo(129) then faSkill = rank; break end
-    end
-
     for bag = 0, NUM_BAG_SLOTS do
         for slot = 1, C_Container.GetContainerNumSlots(bag) do
             local info = C_Container.GetContainerItemInfo(bag, slot)
@@ -279,7 +278,7 @@ function ns.UpdateMacros(forced)
 
                         local usable = true
                         if data.reqLvl > playerLevel then usable = false end
-                        if usable and data.isBandage and data.reqFA > faSkill then usable = false end
+                        
                         if usable and ns.ItemZoneRestrictions[id] then
                             usable = false
                             if currentMap then
