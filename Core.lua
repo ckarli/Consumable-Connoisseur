@@ -83,14 +83,31 @@ local function GetSmartSpell(spellList)
     local knownHighest = false
     for _, data in ipairs(spellList) do
         local id, req, rankNum = data[1], data[2], data[3]
+        
         if IsSpellKnown(id) then knownHighest = true end
         
         if knownHighest and req <= levelCap then
-            local name = ns.SpellCache[id] 
+            local name, rank = GetSpellInfo(id) 
             if name then
-                if rankNum then 
-                    return name .. "(" .. L["RANK"] .. " " .. rankNum .. ")", id
+                -- 1. Classic Check: If name has parens (e.g. "Create Healthstone (Minor)"), use it as-is.
+                if name:find("%(") then
+                    return name, id
                 end
+
+                if rank and rank ~= "" then 
+                    if rank:find("%d") then
+                         -- TBC: "Rank 1" -> "Create Healthstone(Rank 1)" (No Space)
+                        return name .. "(" .. rank .. ")", id
+                    else
+                        -- Classic: "Minor" -> "Create Healthstone (Minor)" (Space)
+                        return name .. " (" .. rank .. ")", id
+                    end
+                end
+                
+                if rankNum then
+                    return name .. "(Rank " .. rankNum .. ")", id
+                end
+
                 return name, id
             end
         end
@@ -464,6 +481,10 @@ frame:SetScript("OnEvent", function(self, event, ...)
         
     elseif event == "GET_ITEM_INFO_RECEIVED" then
         ns.RequestUpdate()
+
+    elseif event == "PLAYER_TARGET_CHANGED" then
+        ns.RequestUpdate()
+
     elseif event == "UNIT_SPELLCAST_SUCCEEDED" then
         local unit, _, spellID = ...
         if ns.SpellCache and ns.SpellCache[spellID] then
