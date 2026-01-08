@@ -97,7 +97,8 @@ local function GetSmartSpell(spellList)
                 if rank and rank ~= "" then 
                     if rank:find("%d") then
                          -- TBC: "Rank 1" -> "Create Healthstone(Rank 1)" (No Space)
-                        return name .. "(" .. rank .. ")", id
+                        -- return name .. "(" .. rank .. ")", id
+                        return name .. "(" .. L["RANK"] .. " " .. rankNum .. ")", id
                     else
                         -- Classic: "Minor" -> "Create Healthstone (Minor)" (Space)
                         return name .. " (" .. rank .. ")", id
@@ -105,7 +106,8 @@ local function GetSmartSpell(spellList)
                 end
                 
                 if rankNum then
-                    return name .. "(Rank " .. rankNum .. ")", id
+                    -- return name .. "(Rank " .. rankNum .. ")", id
+                    return name .. "(" .. L["RANK"] .. " " .. rankNum .. ")", id
                 end
 
                 return name, id
