@@ -30,6 +30,22 @@ local function ExtractNameFromPattern(pattern)
     return namePart
 end
 
+local function HasWellFedBuff()
+    local TARGET_ICON_ID = 136000 
+
+    for i = 1, 40 do
+        local name, icon = UnitAura("player", i, "HELPFUL")
+        
+        if not name then break end
+
+        if icon == TARGET_ICON_ID then
+            return true
+        end
+    end
+
+    return false
+end
+
 local function CacheItemData(itemID)
     local name, _, _, _, _, classType, subType, _, _, _, iPrice, classID, subClassID = GetItemInfo(itemID)
     if not name then return nil end 
@@ -207,15 +223,12 @@ end
 function ns.ScanBags()
     local playerLevel = UnitLevel("player")
     local currentMap = C_Map.GetBestMapForUnit("player")
-    local wellFedName = GetSpellInfo(19705)
+    
+    -- [[ UPDATED BUFF CHECK ]] --
     local hasWellFed = false
     
-    if CC_Settings.UseBuffFood and wellFedName then
-        for i = 1, 40 do
-            local name = UnitAura("player", i, "HELPFUL")
-            if not name then break end
-            if name == wellFedName then hasWellFed = true; break end
-        end
+    if CC_Settings.UseBuffFood then
+        hasWellFed = HasWellFedBuff()
     end
 
     ns.AllowBuffFood = CC_Settings.UseBuffFood and not hasWellFed
