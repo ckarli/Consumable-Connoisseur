@@ -16,8 +16,22 @@ local function ParseNumber(text)
     return tonumber(clean) or 0
 end
 
+local function StripCodes(text)
+    if not text then return "" end
+    text = text:gsub("|c%x%x%x%x%x%x%x%x", "")
+    text = text:gsub("|r", "")
+    text = text:gsub("|T.-|t", "")
+    return text
+end
+
+local function ExtractNameFromPattern(pattern)
+    if not pattern then return nil end
+    local namePart = pattern:match("^(.-)%.%*")
+    return namePart
+end
+
 local function CacheItemData(itemID)
-    local name, _, _, _, _, classType, subType, _, _, _, iPrice, classID = GetItemInfo(itemID)
+    local name, _, _, _, _, classType, subType, _, _, _, iPrice, classID, subClassID = GetItemInfo(itemID)
     if not name then return nil end 
 
     if classID ~= 0 then
@@ -33,33 +47,37 @@ local function CacheItemData(itemID)
         id = itemID, valHealth = 0, valMana = 0, reqLvl = 0, reqFA = 0, price = iPrice or 0,
         isFood = false, isWater = false, isBandage = false, 
         isPotion = false, isHealthstone = false, isBuffFood = false, isPercent = false,
-        incomplete = false
+        incomplete = false, isConjured = false
     }
 
     local foundSeated = false
     local isStrictHealth, isStrictMana = false, false
     
-    -- Load Patterns (with safety fallbacks)
     local txtLevel = L["SCAN_REQ_LEVEL"]
     local txtFA = L["SCAN_REQ_FA"]
     local txtSeated = L["SCAN_SEATED"]
-    local txtWellFed = L["SCAN_WELL_FED"]
+    
+    local patConjured = L["PATTERN_CONJURED"]
 
     for i = 1, scannerTooltip:NumLines() do
         local line = _G["CC_ScannerTooltipTextLeft"..i]
         local text = line and line:GetText()
         
         if text then
+            if text == RETRIEVING_ITEM_INFO then return nil end
+            
+            text = StripCodes(text)
             text = text:lower()
-
             text = text:gsub("([%d])[,%.]", "%1")
+            
+            local combinedText = name:lower() .. " " .. text
 
-            if txtLevel then
+            if txtLevel and text:match(txtLevel) then
                 local lvl = text:match(txtLevel)
                 if lvl then data.reqLvl = tonumber(lvl) end
             end
 
-            if txtFA then
+            if txtFA and text:match(txtFA) then
                 local fa = text:match(txtFA)
                 if fa then 
                     data.reqFA = tonumber(fa) 
@@ -72,71 +90,98 @@ local function CacheItemData(itemID)
             end
 
             if txtSeated and text:find(txtSeated) then foundSeated = true end
-            if txtWellFed and text:find(txtWellFed) then data.isBuffFood = true end
+            if patConjured and text:find(patConjured) then data.isConjured = true end
             
+            if L["PATTERNS_BUFF"] then
+                for _, pat in ipairs(L["PATTERNS_BUFF"]) do
+                    if text:find(pat) then data.isBuffFood = true; break end
+                end
+            end
+            
+            -- [[ STRICT POTION REGEX ]] --
             if not isStrictHealth and not isStrictMana then
-                local hMin = L["SCAN_HPOT_STRICT"] and text:match(L["SCAN_HPOT_STRICT"])
+                local hMin = L["PATTERN_HPOT"] and text:match(L["PATTERN_HPOT"])
                 if hMin then
                     data.valHealth = ParseNumber(hMin)
                     isStrictHealth = true
                     data.isPotion = true
                 end
 
-                local mMin = L["SCAN_MPOT_STRICT"] and text:match(L["SCAN_MPOT_STRICT"])
-                if mMin and not (L["SCAN_HYBRID"] and text:find(L["SCAN_HYBRID"])) then
+                local mMin = L["PATTERN_MPOT"] and text:match(L["PATTERN_MPOT"])
+                if mMin then
                     data.valMana = ParseNumber(mMin)
                     isStrictMana = true
                     data.isPotion = true
                 end
             end
 
+            -- [[ FOOD / WATER ]] --
             if not isStrictHealth and not isStrictMana then
-                local pVal = 0
-                if L["SCAN_PERCENT"] then
-                     pVal = ParseNumber(text:match(L["SCAN_PERCENT"]))
-                end
-
-                if pVal > 0 then
-                    data.isPercent = true
-                    if L["SCAN_MANA"] and text:find(L["SCAN_MANA"]) then data.valMana = 999999 end
-                    if (L["SCAN_HEALTH"] and text:find(L["SCAN_HEALTH"])) or (L["SCAN_MANA"] and not text:find(L["SCAN_MANA"])) then 
-                        data.valHealth = 999999 
-                    end
-                else
-                    local rVal = L["SCAN_RESTORES"] and ParseNumber(text:match(L["SCAN_RESTORES"])) or 0
-                    local hVal = L["SCAN_HEALS"] and ParseNumber(text:match(L["SCAN_HEALS"])) or 0
-                    
-                    if rVal > 0 or hVal > 0 then
-                        local val = (rVal > hVal) and rVal or hVal
-                        if L["SCAN_MANA"] and text:find(L["SCAN_MANA"]) then data.valMana = val end
-                        
-                        -- Check for Health keywords (including Life)
-                        local isHealth = false
-                        if L["SCAN_HEALTH"] and text:find(L["SCAN_HEALTH"]) then isHealth = true end
-                        if L["SCAN_HEALS"] and text:find(L["SCAN_HEALS"]) then isHealth = true end
-                        if L["SCAN_LIFE"] and text:find(L["SCAN_LIFE"]) then isHealth = true end
-                        
-                        if isHealth then data.valHealth = val end
+                if L["PATTERNS_FOOD"] then
+                    for idx, pat in ipairs(L["PATTERNS_FOOD"]) do
+                        local matchVal = text:match(pat)
+                        if matchVal then
+                            if idx == 1 then data.isPercent = true; data.valHealth = 99999
+                            else data.valHealth = ParseNumber(matchVal) end
+                            break
+                        end
                     end
                 end
+                
+                if L["PATTERNS_WATER"] then
+                    for idx, pat in ipairs(L["PATTERNS_WATER"]) do
+                        local matchVal = text:match(pat)
+                        if matchVal then
+                            if idx == 1 then data.isPercent = true; data.valMana = 99999
+                            else data.valMana = ParseNumber(matchVal) end
+                            break
+                        end
+                    end
+                end
+            end
+            
+            -- [[ HS / BANDAGE ]] --
+            if L["PATTERN_HS"] then
+                 local hsVal = combinedText:match(L["PATTERN_HS"])
+                 if hsVal then
+                     data.isHealthstone = true
+                     data.valHealth = ParseNumber(hsVal)
+                 end
+            end
+            
+            if L["PATTERN_BANDAGE"] then
+                 local bVal = combinedText:match(L["PATTERN_BANDAGE"])
+                 if bVal then
+                     data.isBandage = true
+                     data.valHealth = ParseNumber(bVal)
+                 end
             end
         end
     end
 
-    local nameLower = name:lower()
     if foundSeated then
         if data.valMana > 0 then data.isWater = true end
         if data.valHealth > 0 then data.isFood = true end
         if not data.isWater and not data.isFood then data.isFood = true end
-    elseif (subType == "Bandage" or (L["SCAN_BANDAGE"] and nameLower:find(L["SCAN_BANDAGE"]))) and data.valHealth > 0 then
-        data.isBandage = true
-    elseif (L["SCAN_HEALTHSTONE"] and nameLower:find(L["SCAN_HEALTHSTONE"])) and data.valHealth > 0 then
-        data.isHealthstone = true
+    end
+    
+    if data.isPotion and data.valMana > 0 and data.isConjured then
+        data.isPotion = false
     end
 
-    if data.valHealth == 0 and data.valMana == 0 and not data.isBuffFood then
-        data.incomplete = true
-        return data
+    local hasStats = (data.valHealth > 0 or data.valMana > 0)
+    
+    local nameLower = name:lower()
+    local nameCheckHS = ExtractNameFromPattern(L["PATTERN_HS"])
+    local nameCheckBandage = ExtractNameFromPattern(L["PATTERN_BANDAGE"])
+    
+    if (nameCheckHS and nameLower:find(nameCheckHS)) or 
+       (nameCheckBandage and nameLower:find(nameCheckBandage)) then
+        if not hasStats then return nil end
+    end
+
+    if not hasStats and not data.isBuffFood then
+        return "IGNORE"
     end
 
     itemCache[itemID] = data
@@ -159,7 +204,6 @@ local function IsBetter(itemData, itemStack, itemPrice, best)
     return itemStack < best.stack
 end
 
--- [[ PUBLIC SCAN FUNCTION ]] --
 function ns.ScanBags()
     local playerLevel = UnitLevel("player")
     local currentMap = C_Map.GetBestMapForUnit("player")
@@ -194,7 +238,6 @@ function ns.ScanBags()
                 local id = info.itemID
                 
                 if CC_IgnoreList[id] or ns.Excludes[id] then
-                    -- Skipped
                 else
                     local data = itemCache[id]
                     if not data then data = CacheItemData(id) end
