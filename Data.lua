@@ -44,8 +44,12 @@ ns.ItemZoneRestrictions = {
 
 -- Items to always ignore.
 ns.Excludes = {
-    [12217] = true, -- Dragonbreath Chili
-    [5473] = true, -- Scorpid Surprise
+    [11951] = true, -- Whipper Root Tuber (Not a Potion)
+    [13813] = true, -- Blessed Sunfruit Juice (Buff Water)
+    [19318] = true, -- Bottled Alterac Spring Water (Buff Water)
+    [23329] = true, -- Enriched Lasher Root (Not a Potion)
+    [33825] = true, -- Skullfish Soup (Buff Water)
+    [5473] = true,  -- Scorpid Surprise
 }
 
 -- Mage and Warlock Conjure Spells.
