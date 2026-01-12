@@ -63,7 +63,7 @@ local function CacheItemData(itemID)
         id = itemID, valHealth = 0, valMana = 0, reqLvl = 0, reqFA = 0, price = iPrice or 0,
         isFood = false, isWater = false, isBandage = false, 
         isPotion = false, isHealthstone = false, isBuffFood = false, isPercent = false,
-        incomplete = false, isConjured = false
+        isConjured = false
     }
 
     local foundSeated = false
@@ -260,10 +260,6 @@ function ns.ScanBags()
                         dataRetry = true
                     elseif data == "IGNORE" then
                     else
-                        if data.incomplete then
-                            dataRetry = true
-                        end
-
                         local usable = true
                         if data.reqLvl > playerLevel then usable = false end
                         
