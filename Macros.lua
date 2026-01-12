@@ -14,13 +14,10 @@ local function GetSmartSpell(spellList)
         if tLvl > 0 then levelCap = tLvl end
     end
 
-    local knownHighest = false
     for _, data in ipairs(spellList) do
         local id, req, rankNum = data[1], data[2], data[3]
         
-        if IsSpellKnown(id) then knownHighest = true end
-        
-        if knownHighest and req <= levelCap then
+        if IsSpellKnown(id) and req <= levelCap then
             local name, rank = GetSpellInfo(id) 
             if name then
                 if name:find("%(") then
@@ -52,17 +49,14 @@ function ns.UpdateMacros(forced)
         return 
     end
 
-    -- 1. Get the Data
     local best, dataRetry = ns.ScanBags()
     
-    -- 2. Handle missing data retry
     if dataRetry then
         ns.RegisterDataRetry()
     else
         ns.UnregisterDataRetry()
     end
 
-    -- 3. Write the Macros
     for typeName, cfg in pairs(Config) do
         local itemID = best[typeName].id
         local tooltipLine, actionBlock, stateID, icon
@@ -128,7 +122,6 @@ function ns.UpdateMacros(forced)
         end
     end
     
-    -- 4. Clean up
     if forced then wipe(currentMacroState) end
     if ns.UpdateLDB then ns.UpdateLDB() end
 end
