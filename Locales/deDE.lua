@@ -3,6 +3,8 @@ local L = ns.L
 
 -- [[ GERMAN (deDE) ]] --
 if GetLocale() == "deDE" then
+    L["BRAND"] = "Connoisseur"
+
     L["MACRO_BANDAGE"] = "- Verband"
     L["MACRO_FOOD"] = "- Essen"
     L["MACRO_HPOT"] = "- Heiltrank"
@@ -42,20 +44,34 @@ if GetLocale() == "deDE" then
     L["UI_RIGHT_CLICK"] = "Rechtsklick"
     L["UI_TOGGLE"] = "Umschalten"
 
-    L["SCAN_BANDAGE"] = "verband"
-    L["SCAN_HEALS"] = "heilt.- ([%d%.]+) schaden"
-    L["SCAN_HEALTH"] = "gesundheit"
-    L["SCAN_HEALTHSTONE"] = "gesundheitsstein"
-    L["SCAN_HPOT_STRICT"] = "stellt (%d+) bis (%d+) gesundheit"
-    L["SCAN_HYBRID"] = "mana und gesundheit"
-    L["SCAN_LIFE"] = "leben"
-    L["SCAN_MANA"] = "mana"
-    L["SCAN_MPOT_STRICT"] = "stellt (%d+) bis (%d+) mana"
-    L["SCAN_PERCENT"] = "stellt.- (%d+)%%"
+    -- [[ SCANNING PATTERNS ]] --
+
     L["SCAN_REQ_FA"] = "benötigt erste hilfe %((%d+)%)"
     L["SCAN_REQ_LEVEL"] = "benötigt stufe (%d+)"
-    L["SCAN_RESTORES"] = "stellt.- ([%d%.]+) [pmg]"
-    L["SCAN_SEATED"] = "sitzen bleiben"
-    L["SCAN_USE"] = "benutzen:"
-    L["SCAN_WELL_FED"] = "satt"
+    L["SCAN_SEATED"] = "beim.-sitzen"
+
+    -- Food
+    L["PATTERNS_FOOD"] = {
+        "stellt.-(%d+)%%.-gesundheit",
+        "stellt.-(%d+)%s+gesundheit"
+    }
+
+    -- Water
+    L["PATTERNS_WATER"] = {
+        "stellt.-(%d+)%%.-mana",
+        "stellt.-(%d+)%s+mana"
+    }
+
+    -- Buff Food
+    L["PATTERNS_BUFF"] = {
+        "satt",
+        "10 sekunden",
+        "10 min"
+    }
+
+    L["PATTERN_BANDAGE"] = "verband.*heilt.-(%d+)%s+schaden"
+    L["PATTERN_CONJURED"] = "herbeigezauberter gegenstand"
+    L["PATTERN_HPOT"] = "stellt%s+(%d+)%s+bis%s+%d+%s+gesundheit"
+    L["PATTERN_HS"] = "gesundheitsstein.*stellt.-(%d+).-gesundheit"
+    L["PATTERN_MPOT"] = "stellt%s+(%d+)%s+bis%s+%d+%s+mana"
 end
