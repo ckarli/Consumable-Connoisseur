@@ -55,11 +55,9 @@ Please reach out if you can help with other languages!
 
 ## Testing Status
 
-🟢 World of Warcraft Classic : Vanilla (Era, Anniversary, Hardcore, Anniversary Hardcore)
+🟢 World of Warcraft Classic (🟡 Season of Discover)
 
-🟡 World of Warcraft Classic : Season of Discovery
-
-🟢 World of Warcraft Classic : The Burning Crusade (Anniversary)
+🟢 Burning Crusade Anniversary
 
 🔴 Mists of Pandaria Classic
 
