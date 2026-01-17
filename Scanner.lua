@@ -32,17 +32,16 @@ end
 
 local function HasWellFedBuff()
     local TARGET_ICON_ID = 136000 
-
     for i = 1, 40 do
-        local name, icon = UnitAura("player", i, "HELPFUL")
-        
+        local name, icon, _, _, _, _, _, _, _, spellID = UnitAura("player", i, "HELPFUL")
         if not name then break end
-
         if icon == TARGET_ICON_ID then
             return true
         end
+        if ns.WellFedBuffIDs and ns.WellFedBuffIDs[spellID] then
+            return true
+        end
     end
-
     return false
 end
 
