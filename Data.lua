@@ -60,6 +60,19 @@ ns.ItemZoneRestrictions = {
     [19068] = {1460}, -- Warsong Gulch Silk Bandage
 }
 
+-- Additional "Well Fed" Buff IDs.
+ns.WellFedBuffIDs = {
+    [18125] = true, -- blessed-sunfruit
+    [18141] = true, -- blessed-sunfruit-juice
+    [18191] = true, -- increased-stamina
+    [18192] = true, -- increased-agility
+    [18193] = true, -- increased-spirit
+    [18194] = true, -- mana-regeneration
+    [18222] = true, -- health-regeneration
+    [22730] = true, -- increased-intellect
+    [23697] = true, -- alterac-spring-water
+}
+
 -- Items to always ignore.
 ns.Excludes = {
     [11951] = true, -- Whipper Root Tuber (Not a Potion)
