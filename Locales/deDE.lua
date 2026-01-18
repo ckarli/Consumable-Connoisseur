@@ -43,35 +43,4 @@ if GetLocale() == "deDE" then
     L["UI_MIDDLE_CLICK"] = "Mittelklick"
     L["UI_RIGHT_CLICK"] = "Rechtsklick"
     L["UI_TOGGLE"] = "Umschalten"
-
-    -- [[ SCANNING PATTERNS ]] --
-
-    L["SCAN_REQ_FA"] = "benötigt erste hilfe %((%d+)%)"
-    L["SCAN_REQ_LEVEL"] = "benötigt stufe (%d+)"
-    L["SCAN_SEATED"] = "beim.-sitzen"
-
-    -- Food
-    L["PATTERNS_FOOD"] = {
-        "stellt.-(%d+)%%.-gesundheit",
-        "stellt.-(%d+)%s+gesundheit"
-    }
-
-    -- Water
-    L["PATTERNS_WATER"] = {
-        "stellt.-(%d+)%%.-mana",
-        "stellt.-(%d+)%s+mana"
-    }
-
-    -- Buff Food
-    L["PATTERNS_BUFF"] = {
-        "satt",
-        "10 sekunden",
-        "10 min"
-    }
-
-    L["PATTERN_BANDAGE"] = "verband.*heilt.-(%d+)%s+schaden"
-    L["PATTERN_CONJURED"] = "herbeigezauberter gegenstand"
-    L["PATTERN_HPOT"] = "stellt%s+(%d+)%s+bis%s+%d+%s+gesundheit"
-    L["PATTERN_HS"] = "gesundheitsstein.*stellt.-(%d+).-gesundheit"
-    L["PATTERN_MPOT"] = "stellt%s+(%d+)%s+bis%s+%d+%s+mana"
 end

@@ -43,34 +43,3 @@ L["UI_LEFT_CLICK"] = "Left-Click"
 L["UI_MIDDLE_CLICK"] = "Middle-Click"
 L["UI_RIGHT_CLICK"] = "Right-Click"
 L["UI_TOGGLE"] = "Toggle"
-
--- [[ SCANNING PATTERNS ]] --
-
-L["SCAN_REQ_FA"] = "requires first aid %((%d+)%)"
-L["SCAN_REQ_LEVEL"] = "requires level (%d+)"
-L["SCAN_SEATED"] = "must remain seated"
-
--- Food
-L["PATTERNS_FOOD"] = {
-    "restores.-(%d+)%%.-of.-health", 
-    "restores%s+(%d+)%s+health"
-}
-
--- Water
-L["PATTERNS_WATER"] = {
-    "restores.-(%d+)%%.-of.-mana",
-    "restores%s+(%d+)%s+mana"
-}
-
--- Buff Food
-L["PATTERNS_BUFF"] = {
-    "well fed",
-    "10 seconds",
-    "10 min"
-}
-
-L["PATTERN_BANDAGE"] = "bandage.*heals%s+(%d+)%s+damage"
-L["PATTERN_CONJURED"] = "conjured item"
-L["PATTERN_HPOT"] = "restores%s+(%d+)%s+to%s+%d+%s+health%."
-L["PATTERN_HS"] = "healthstone.*restores%s+(%d+)%s+life"
-L["PATTERN_MPOT"] = "restores%s+(%d+)%s+to%s+%d+%s+mana%."
