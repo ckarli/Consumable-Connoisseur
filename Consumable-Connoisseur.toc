@@ -30,7 +30,11 @@ Locales\zhCN.lua
 Locales\zhTW.lua
 
 # Connoisseur
-Data.lua
+Data/General.lua
+Data/Potions.lua
+Data/Bandages.lua
+Data/Food-and-Water.lua
+Data/Healthstones.lua
 Scanner.lua
 Macros.lua
 Core.lua
