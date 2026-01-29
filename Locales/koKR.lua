@@ -8,6 +8,7 @@ if GetLocale() == "koKR" then
     L["MACRO_HPOT"] = "- 치유 물약"
     L["MACRO_HS"] = "- 생명석"
     L["MACRO_MPOT"] = "- 마나 물약"
+    L["MACRO_MGEM"] = "- Mana Gem"
     L["MACRO_WATER"] = "- 물"
 
     L["ERR_ZONE"] = "여기선 사용할 수 없습니다."

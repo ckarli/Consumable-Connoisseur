@@ -8,6 +8,7 @@ if GetLocale() == "zhCN" then
     L["MACRO_HPOT"] = "- 治疗药水"
     L["MACRO_HS"] = "- 治疗石"
     L["MACRO_MPOT"] = "- 法力药水"
+    L["MACRO_MGEM"] = "- Mana Gem"
     L["MACRO_WATER"] = "- 水"
 
     L["ERR_ZONE"] = "你不能在这里使用该物品。"

@@ -10,6 +10,7 @@ if GetLocale() == "deDE" then
     L["MACRO_HPOT"] = "- Heiltrank"
     L["MACRO_HS"] = "- GS"
     L["MACRO_MPOT"] = "- Manatrank"
+    L["MACRO_MGEM"] = "- Mana Gem"
     L["MACRO_WATER"] = "- Wasser"
 
     L["ERR_ZONE"] = "Das kannst du hier nicht benutzen."

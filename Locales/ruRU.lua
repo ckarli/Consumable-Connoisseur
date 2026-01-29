@@ -8,6 +8,7 @@ if GetLocale() == "ruRU" then
     L["MACRO_HPOT"] = "- Леч. зелье"
     L["MACRO_HS"] = "- Кам. здоровья"
     L["MACRO_MPOT"] = "- Зелье маны"
+    L["MACRO_MGEM"] = "- Mana Gem"
     L["MACRO_WATER"] = "- Вода"
 
     L["ERR_ZONE"] = "Вы не можете использовать это здесь."

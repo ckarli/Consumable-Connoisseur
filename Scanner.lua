@@ -9,6 +9,7 @@ local currentFASkill = 0
 ns.RawData = ns.RawData or {}
 ns.RawData.FoodAndWater = ns.RawData.FoodAndWater or {}
 ns.RawData.Potions = ns.RawData.Potions or {}
+ns.RawData.ManaGem = ns.RawData.ManaGem or {}
 ns.RawData.Healthstone = ns.RawData.Healthstone or {}
 ns.RawData.Bandage = ns.RawData.Bandage or {}
 
@@ -39,6 +40,8 @@ local best = {
         count = 0
     },
     ["Mana Potion"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
+    ["Mana Gem"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
+    ["Mana Gem 2"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
     ["Healthstone"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
     ["Bandage"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0}
 }
@@ -98,10 +101,11 @@ local function CacheItemData(itemID)
 
     local rawFood = ns.RawData.FoodAndWater[itemID]
     local rawPotion = ns.RawData.Potions[itemID]
+    local rawGem = ns.RawData.ManaGem[itemID]
     local rawHS = ns.RawData.Healthstone[itemID]
     local rawBandage = ns.RawData.Bandage[itemID]
 
-    if not (rawFood or rawPotion or rawHS or rawBandage) then
+    if not (rawFood or rawPotion or rawGem or rawHS or rawBandage) then
         itemCache[itemID] = "IGNORE"
         return "IGNORE"
     end
@@ -117,6 +121,7 @@ local function CacheItemData(itemID)
         isWater = false,
         isBandage = false,
         isPotion = false,
+        isManaGem = false,
         isHealthstone = false,
         isBuffFood = false,
         isPercent = false,
@@ -153,6 +158,9 @@ local function CacheItemData(itemID)
         data.valHealth = rawPotion[1]
         data.valMana = rawPotion[2]
         data.zones = rawPotion[3]
+    elseif rawGem then
+        data.isManaGem = true
+        data.valMana = rawGem[1]
     elseif rawHS then
         data.isHealthstone = true
         data.valHealth = rawHS[1]
@@ -196,9 +204,72 @@ local function IsBetter(itemData, itemCount, itemPrice, currentBest, score)
     return itemCount < currentBest.count
 end
 
+local function IsSpellKnownSafe(spellID)
+    local known = IsSpellKnown(spellID)
+    if not known and IsPlayerSpell then
+        known = IsPlayerSpell(spellID)
+    end
+    return known
+end
+
+function ns.GetKnownManaGemData()
+    if not ns.ConjureSpells or not ns.ConjureSpells.MageGem then
+        return nil, nil
+    end
+
+    local bestGem, secondGem
+    for _, data in ipairs(ns.ConjureSpells.MageGem) do
+        if IsSpellKnownSafe(data[1]) then
+            if not bestGem then
+                bestGem = data
+            elseif not secondGem then
+                secondGem = data
+                break
+            end
+        end
+    end
+
+    return bestGem, secondGem
+end
+
+local function UpdateTopTwo(bestEntry, secondEntry, data, totalCount, score)
+    if IsBetter(data, totalCount, data.price, bestEntry, score) then
+        if bestEntry.id then
+            secondEntry.id = bestEntry.id
+            secondEntry.val = bestEntry.val
+            secondEntry.price = bestEntry.price
+            secondEntry.count = bestEntry.count
+        end
+        bestEntry.id = data.id
+        bestEntry.val = score
+        bestEntry.price = data.price
+        bestEntry.count = totalCount
+        return
+    end
+
+    if data.id ~= bestEntry.id and IsBetter(data, totalCount, data.price, secondEntry, score) then
+        secondEntry.id = data.id
+        secondEntry.val = score
+        secondEntry.price = data.price
+        secondEntry.count = totalCount
+    end
+end
+
 function ns.ScanBags()
     local playerLevel = UnitLevel("player")
     local currentMap = C_Map.GetBestMapForUnit("player")
+    local allowedManaGemIDs
+
+    if ns.GetKnownManaGemData then
+        local bestGem, secondGem = ns.GetKnownManaGemData()
+        if bestGem and bestGem[4] then
+            allowedManaGemIDs = {}
+            allowedManaGemIDs[bestGem[4]] = true
+            if secondGem and secondGem[4] then
+                allowedManaGemIDs[secondGem[4]] = true
+            end
+        end
+    end
 
     local hasWellFed = false
     if CC_Settings.UseBuffFood then
@@ -309,6 +380,16 @@ function ns.ScanBags()
                                         b.val = data.valMana
                                         b.price = data.price
                                         b.count = totalCount
+                                    end
+                                elseif data.isManaGem then
+                                    if not allowedManaGemIDs or allowedManaGemIDs[id] then
+                                        UpdateTopTwo(
+                                            best["Mana Gem"],
+                                            best["Mana Gem 2"],
+                                            data,
+                                            totalCount,
+                                            data.valMana
+                                        )
                                     end
                                 elseif data.isFood or data.isWater then
                                     if not (data.isBuffFood and not ns.AllowBuffFood) then

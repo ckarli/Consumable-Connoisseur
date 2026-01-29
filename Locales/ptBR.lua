@@ -8,6 +8,7 @@ if GetLocale() == "ptBR" then
     L["MACRO_HPOT"] = "- Poção de Cura"
     L["MACRO_HS"] = "- Pedra"
     L["MACRO_MPOT"] = "- Poção de Mana"
+    L["MACRO_MGEM"] = "- Mana Gem"
     L["MACRO_WATER"] = "- Água"
 
     L["ERR_ZONE"] = "Você não pode usar isso aqui."

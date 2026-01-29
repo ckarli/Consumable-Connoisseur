@@ -10,6 +10,7 @@ L["MACRO_FOOD"] = "- Food"
 L["MACRO_HPOT"] = "- Health Potion"
 L["MACRO_HS"] = "- Healthstone"
 L["MACRO_MPOT"] = "- Mana Potion"
+L["MACRO_MGEM"] = "- Mana Gem"
 L["MACRO_WATER"] = "- Water"
 
 L["ERR_ZONE"] = "You can't use that here."

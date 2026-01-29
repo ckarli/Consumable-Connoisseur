@@ -41,6 +41,20 @@ local function GetSmartSpell(spellList)
     return nil, 0
 end
 
+local function GetSpellNameWithRank(spellID, rankNum)
+    local name = GetSpellInfo(spellID)
+    if not name then
+        return nil
+    end
+    if name:find("%(") then
+        return name
+    end
+    if rankNum then
+        return name .. "(" .. L["RANK"] .. " " .. rankNum .. ")"
+    end
+    return name
+end
+
 function ns.UpdateMacros(forced)
     if InCombatLockdown() then
         ns.RequestUpdate()
@@ -60,6 +74,7 @@ function ns.UpdateMacros(forced)
 
     for typeName, cfg in pairs(Config) do
         local itemID = best[typeName].id
+        local secondaryItemID
         local stateID = itemID and tostring(itemID) or "none"
 
         local rightSpellName, rightSpellID, midSpellName, midSpellID
@@ -73,6 +88,23 @@ function ns.UpdateMacros(forced)
         elseif typeName == "Healthstone" and ns.ConjureSpells.WarlockHS then
             rightSpellName, rightSpellID = GetSmartSpell(ns.ConjureSpells.WarlockHS)
             midSpellName, midSpellID = GetSmartSpell(ns.ConjureSpells.WarlockSoul)
+        elseif typeName == "Mana Gem" and ns.ConjureSpells.MageGem and ns.GetKnownManaGemData then
+            local bestGem, secondGem = ns.GetKnownManaGemData()
+            if bestGem then
+                rightSpellID = bestGem[1]
+                rightSpellName = GetSpellNameWithRank(bestGem[1], bestGem[3])
+            end
+            if secondGem then
+                midSpellID = secondGem[1]
+                midSpellName = GetSpellNameWithRank(secondGem[1], secondGem[3])
+            end
+            if best["Mana Gem 2"] then
+                secondaryItemID = best["Mana Gem 2"].id
+            end
+        end
+
+        if secondaryItemID and secondaryItemID ~= itemID then
+            stateID = stateID .. "_S:" .. secondaryItemID
         end
 
         if rightSpellName or midSpellName then
@@ -90,7 +122,11 @@ function ns.UpdateMacros(forced)
 
             if itemID then
                 tooltipLine = "#showtooltip item:" .. itemID .. "\n"
-                actionBlock = "/run CC_LastID=" .. itemID .. ";CC_LastTime=GetTime()\n/use item:" .. itemID
+                local useLines = "/use item:" .. itemID
+                if typeName == "Mana Gem" and secondaryItemID and secondaryItemID ~= itemID then
+                    useLines = useLines .. "\n/use item:" .. secondaryItemID
+                end
+                actionBlock = "/run CC_LastID=" .. itemID .. ";CC_LastTime=GetTime()\n" .. useLines
                 icon = GetItemIcon(itemID)
             else
                 local msg = string.format(L["MSG_NO_ITEM"], typeName)

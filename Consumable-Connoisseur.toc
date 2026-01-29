@@ -31,6 +31,7 @@ Locales\zhTW.lua
 
 # Connoisseur
 Data/General.lua
+Data/Mana-Gems.lua
 Data/Potions.lua
 Data/Bandages.lua
 Data/Food-and-Water.lua
