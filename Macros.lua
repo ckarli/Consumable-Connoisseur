@@ -138,19 +138,22 @@ function ns.UpdateMacros(forced)
             local conjureBlock = ""
             if rightSpellName or midSpellName then
                 local castLine = ""
-                local stopConditions = ""
+                local stopConditions = {}
 
                 if midSpellName then
                     castLine = castLine .. "[btn:3] " .. midSpellName .. "; "
-                    stopConditions = stopConditions .. "[btn:3]"
+                    stopConditions[#stopConditions + 1] = "[btn:3]"
                 end
                 if rightSpellName then
                     castLine = castLine .. "[btn:2] " .. rightSpellName .. "; "
-                    stopConditions = stopConditions .. "[btn:2]"
+                    stopConditions[#stopConditions + 1] = "[btn:2]"
                 end
 
                 if castLine ~= "" then
-                    conjureBlock = "/cast " .. castLine .. "\n/stopmacro " .. stopConditions .. "\n"
+                    conjureBlock = "/cast " .. castLine .. "\n"
+                    for _, condition in ipairs(stopConditions) do
+                        conjureBlock = conjureBlock .. "/stopmacro " .. condition .. "\n"
+                    end
                 end
             end
 
