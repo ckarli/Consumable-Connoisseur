@@ -1,5 +1,5 @@
 ## Title: Connoisseur
-## Notes: Automatically use the best available Food, Water, Potions, Healthstones, and Bandages currently in your bags.
+## Notes: Automatically use the best available Food, Water, Potions, Mana Gems, Healthstones, and Bandages currently in your bags.
 ## Author: Gogo1951
 ## X-License: MIT
 
@@ -33,6 +33,7 @@ Locales\zhTW.lua
 Data/General.lua
 Data/Mana-Gems.lua
 Data/Potions.lua
+Data/ManaGems.lua
 Data/Bandages.lua
 Data/Food-and-Water.lua
 Data/Healthstones.lua

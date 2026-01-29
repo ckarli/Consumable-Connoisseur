@@ -30,6 +30,7 @@ if GetLocale() == "esES" then
 
     L["TIP_DOWNRANK"] = "Seleccionar a un jugador de menor nivel hará que la macro conjure objetos apropiados para su nivel."
     L["TIP_MAGE_CONJURE"] = "Clic derecho en tus macros de Comida o Agua para crear Comida o Agua."
+    L["TIP_MAGE_GEM"] = "Clic derecho en tu macro de Gema de maná para crear una Gema de maná."
     L["TIP_MAGE_TABLE"] = "Clic central para lanzar Ritual de refrigerio."
     L["TIP_WARLOCK_CONJURE"] = "Clic derecho en tu macro de Piedra de salud para crear una Piedra de salud."
     L["TIP_WARLOCK_SOUL"] = "Clic central para lanzar Ritual de almas."

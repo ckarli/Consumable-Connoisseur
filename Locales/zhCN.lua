@@ -30,6 +30,7 @@ if GetLocale() == "zhCN" then
 
     L["TIP_DOWNRANK"] = "选中低等级玩家时，宏将制造适合其等级的物品。"
     L["TIP_MAGE_CONJURE"] = "右键点击食物或水宏以制造食物或水。"
+    L["TIP_MAGE_GEM"] = "右键点击你的法力宝石宏来制造法力宝石。"
     L["TIP_MAGE_TABLE"] = "中键点击以施放召唤餐桌。"
     L["TIP_WARLOCK_CONJURE"] = "右键点击治疗石宏以制造治疗石。"
     L["TIP_WARLOCK_SOUL"] = "中键点击以施放灵魂仪式。"

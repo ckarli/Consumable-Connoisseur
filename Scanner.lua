@@ -41,7 +41,6 @@ local best = {
     },
     ["Mana Potion"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
     ["Mana Gem"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
-    ["Mana Gem 2"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
     ["Healthstone"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0},
     ["Bandage"] = {id = nil, val = 0, price = 0, isBuffFood = false, isPercent = false, isHybrid = false, count = 0}
 }
@@ -101,11 +100,11 @@ local function CacheItemData(itemID)
 
     local rawFood = ns.RawData.FoodAndWater[itemID]
     local rawPotion = ns.RawData.Potions[itemID]
-    local rawGem = ns.RawData.ManaGem[itemID]
+    local rawManaGem = ns.RawData.ManaGem[itemID]
     local rawHS = ns.RawData.Healthstone[itemID]
     local rawBandage = ns.RawData.Bandage[itemID]
 
-    if not (rawFood or rawPotion or rawGem or rawHS or rawBandage) then
+    if not (rawFood or rawPotion or rawManaGem or rawHS or rawBandage) then
         itemCache[itemID] = "IGNORE"
         return "IGNORE"
     end
@@ -158,9 +157,10 @@ local function CacheItemData(itemID)
         data.valHealth = rawPotion[1]
         data.valMana = rawPotion[2]
         data.zones = rawPotion[3]
-    elseif rawGem then
+    elseif rawManaGem then
         data.isManaGem = true
-        data.valMana = rawGem[1]
+        data.valMana = rawManaGem[1]
+        data.zones = rawManaGem[2]
     elseif rawHS then
         data.isHealthstone = true
         data.valHealth = rawHS[1]
@@ -382,14 +382,12 @@ function ns.ScanBags()
                                         b.count = totalCount
                                     end
                                 elseif data.isManaGem then
-                                    if not allowedManaGemIDs or allowedManaGemIDs[id] then
-                                        UpdateTopTwo(
-                                            best["Mana Gem"],
-                                            best["Mana Gem 2"],
-                                            data,
-                                            totalCount,
-                                            data.valMana
-                                        )
+                                    if IsBetter(data, totalCount, data.price, best["Mana Gem"], data.valMana) then
+                                        local b = best["Mana Gem"]
+                                        b.id = id
+                                        b.val = data.valMana
+                                        b.price = data.price
+                                        b.count = totalCount
                                     end
                                 elseif data.isFood or data.isWater then
                                     if not (data.isBuffFood and not ns.AllowBuffFood) then

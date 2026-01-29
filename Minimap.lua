@@ -65,12 +65,16 @@ UpdateTooltip = function(anchor)
         local knowsTable = ns.ConjureSpells.MageTable and KnowsAny(ns.ConjureSpells.MageTable)
         local knowsFood = ns.ConjureSpells.MageFood and KnowsAny(ns.ConjureSpells.MageFood)
         local knowsWater = ns.ConjureSpells.MageWater and KnowsAny(ns.ConjureSpells.MageWater)
+        local knowsGem = ns.ConjureSpells.MageGem and KnowsAny(ns.ConjureSpells.MageGem)
 
-        if knowsFood or knowsWater or knowsTable then
+        if knowsFood or knowsWater or knowsTable or knowsGem then
             tooltip:AddLine(" ")
             tooltip:AddLine(cColor .. L["PREFIX_MAGE"] .. "|r")
             if knowsFood or knowsWater then
                 tooltip:AddLine(descColor .. L["TIP_MAGE_CONJURE"] .. "|r", 1, 1, 1, true)
+            end
+            if knowsGem then
+                tooltip:AddLine(descColor .. L["TIP_MAGE_GEM"] .. "|r", 1, 1, 1, true)
             end
             if knowsTable then
                 tooltip:AddLine(" ")

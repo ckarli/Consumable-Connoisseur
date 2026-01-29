@@ -32,6 +32,7 @@ if GetLocale() == "deDE" then
 
     L["TIP_DOWNRANK"] = "Wenn du einen Spieler mit niedrigerer Stufe anvisierst, wird das Makro Gegenstände herbeizaubern, die für dessen Stufe angemessen sind."
     L["TIP_MAGE_CONJURE"] = "Rechtsklick auf dein Essen- oder Wasser-Makro, um Essen oder Wasser herbeizuzaubern."
+    L["TIP_MAGE_GEM"] = "Rechtsklick auf dein Managemmen-Makro, um eine Managemme herbeizuzaubern."
     L["TIP_MAGE_TABLE"] = "Mittelklick, um Tischlein deck dich zu wirken."
     L["TIP_WARLOCK_CONJURE"] = "Rechtsklick auf dein Gesundheitsstein-Makro, um einen Gesundheitsstein herzustellen."
     L["TIP_WARLOCK_SOUL"] = "Mittelklick, um Ritual der Seelen zu wirken."

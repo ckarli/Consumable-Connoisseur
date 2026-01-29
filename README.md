@@ -26,7 +26,7 @@ Connoisseur can even prioritize food that keeps you "Well Fed" if your buff drop
 
 ## Automatically Conjour Relevant Items
 
-For Mages and Warlocks, Right-Click on your Food, Water, or Healthstone macros to make more.
+For Mages and Warlocks, Right-Click on your Food, Water, Mana Gem, or Healthstone macros to make more.
 
 And by simply targeting a lower-level player, when you Right-click on the macro, you'll conjour items useful to that player.
 
@@ -39,7 +39,7 @@ And by simply targeting a lower-level player, when you Right-click on the macro,
 1. Install the addon.
 2. Log in.
 3. Open your Macro window (`/macro` or `/m`).
-4. Look for macros named `- Food`, `- Water`, etc.
+4. Look for macros named `- Food`, `- Water`, `- Mana Gem`, etc.
 5. Drag them to your bars.
 6. Done, never think about consumables again. (=
 

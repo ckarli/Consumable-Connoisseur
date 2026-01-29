@@ -32,6 +32,7 @@ L["PREFIX_WARLOCK"] = "Attention Warlocks"
 
 L["TIP_DOWNRANK"] = "Targeting a lower-level player will cause the macro to conjure items appropriate for their level."
 L["TIP_MAGE_CONJURE"] = "Right-Click on your Food or Water macros to Create Food or Water."
+L["TIP_MAGE_GEM"] = "Right-Click on your Mana Gem macro to create a Mana Gem."
 L["TIP_MAGE_TABLE"] = "Middle-click to cast Ritual of Refreshment."
 L["TIP_WARLOCK_CONJURE"] = "Right-Click on your Healthstone macro to create a Healthstone."
 L["TIP_WARLOCK_SOUL"] = "Middle-click to cast Ritual of Souls."
