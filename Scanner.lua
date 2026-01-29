@@ -204,9 +204,72 @@ local function IsBetter(itemData, itemCount, itemPrice, currentBest, score)
     return itemCount < currentBest.count
 end
 
+local function IsSpellKnownSafe(spellID)
+    local known = IsSpellKnown(spellID)
+    if not known and IsPlayerSpell then
+        known = IsPlayerSpell(spellID)
+    end
+    return known
+end
+
+function ns.GetKnownManaGemData()
+    if not ns.ConjureSpells or not ns.ConjureSpells.MageGem then
+        return nil, nil
+    end
+
+    local bestGem, secondGem
+    for _, data in ipairs(ns.ConjureSpells.MageGem) do
+        if IsSpellKnownSafe(data[1]) then
+            if not bestGem then
+                bestGem = data
+            elseif not secondGem then
+                secondGem = data
+                break
+            end
+        end
+    end
+
+    return bestGem, secondGem
+end
+
+local function UpdateTopTwo(bestEntry, secondEntry, data, totalCount, score)
+    if IsBetter(data, totalCount, data.price, bestEntry, score) then
+        if bestEntry.id then
+            secondEntry.id = bestEntry.id
+            secondEntry.val = bestEntry.val
+            secondEntry.price = bestEntry.price
+            secondEntry.count = bestEntry.count
+        end
+        bestEntry.id = data.id
+        bestEntry.val = score
+        bestEntry.price = data.price
+        bestEntry.count = totalCount
+        return
+    end
+
+    if data.id ~= bestEntry.id and IsBetter(data, totalCount, data.price, secondEntry, score) then
+        secondEntry.id = data.id
+        secondEntry.val = score
+        secondEntry.price = data.price
+        secondEntry.count = totalCount
+    end
+end
+
 function ns.ScanBags()
     local playerLevel = UnitLevel("player")
     local currentMap = C_Map.GetBestMapForUnit("player")
+    local allowedManaGemIDs
+
+    if ns.GetKnownManaGemData then
+        local bestGem, secondGem = ns.GetKnownManaGemData()
+        if bestGem and bestGem[4] then
+            allowedManaGemIDs = {}
+            allowedManaGemIDs[bestGem[4]] = true
+            if secondGem and secondGem[4] then
+                allowedManaGemIDs[secondGem[4]] = true
+            end
+        end
+    end
 
     local hasWellFed = false
     if CC_Settings.UseBuffFood then

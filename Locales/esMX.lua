@@ -8,7 +8,7 @@ if GetLocale() == "esMX" then
     L["MACRO_HPOT"] = "- Poc. Salud"
     L["MACRO_HS"] = "- Piedra"
     L["MACRO_MPOT"] = "- Poc. Maná"
-    L["MACRO_MGEM"] = "- Gema de maná"
+    L["MACRO_MGEM"] = "- Mana Gem"
     L["MACRO_WATER"] = "- Agua"
 
     L["ERR_ZONE"] = "No puedes usar eso aquí."
